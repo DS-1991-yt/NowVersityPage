@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, spUtil, $location) {
+    /* widget controller */
+    var c = this;
+    //alert('CLIENT SCRIPT LOADED');
+    $scope.selectedCourse = {};
+    $scope.enrollment = {};
+
+    $scope.enroll = function(courseId) {
+        alert('enroll button clicked');
+        console.log(courseId);
+        $location.url('/nowversity?id=nv_course_enroll&course_id=' + courseId);
+    };
+
+    $scope.submitEnrollment = function() {
+        alert('sublit button clicked');
+        spUtil.update($scope, {
+            action: 'enroll',
+            course_id: $scope.selectedCourse.sys_id,
+            enrollment: {
+                full_name: $scope.enrollment.full_name,
+                email: $scope.enrollment.email,
+                mobile: $scope.enrollment.mobile
+            }
+        }).then(function() {
+            $('#enrollModal').modal('hide');
+            spUtil.addInfoMessage('Enrollment submitted successfully. Payment pending.');
+        });
+    };
+
+    $scope.testServer = function() {
+        alert('test button clicked');
+        spUtil.update($scope, {
+            action: 'test'
+        });
+    };
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>course_list</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Course List</name>
+        <option_schema/>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	
+	data.courses = [];
+
+    var gr = new GlideRecord('x_528401_course_ma_courses');
+    gr.addQuery('is_active', true);
+    gr.orderBy('course_name');
+    gr.query();
+
+    while (gr.next()) {
+        data.courses.push({
+            sys_id: gr.getUniqueValue(),
+            name: gr.getValue('course_name'),
+            description: gr.getValue('description'),
+            cost: gr.getValue('cost'),
+            timings: gr.getValue('schedule'),
+            location: gr.getValue('location'),
+			short_description: gr.getValue('short_description'),
+			instructor: gr.getValue('instructor_name'),
+			image: gr.getValue('image_url'),
+        });
+    }
+	
+	if (input && input.action === 'enroll') {
+		gs.log(input.action);
+    gs.addInfoMessage(input.action);
+    var enr = new GlideRecord('x_528401_course_ma_enrollments');
+    enr.initialize();
+
+    enr.course = input.course_id;
+    enr.student_name = input.enrollment.full_name;
+    enr.email_address = input.enrollment.email;
+    enr.mobile_number = input.enrollment.mobile;
+
+    enr.enrollment_status = 'pending_payment';
+    enr.payment_confirmed = false;
+
+    enr.insert();
+}
+	
+	if (input && input.action === 'test') {
+		    gs.addInfoMessage('SERVER HIT SUCCESS')
+        gs.info('SERVER HIT SUCCESS');
+    }
+	
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-12-17 15:07:10</sys_created_on>
+        <sys_id>1e8ef9f283f53210d3241080deaad339</sys_id>
+        <sys_mod_count>31</sys_mod_count>
+        <sys_name>Course List</sys_name>
+        <sys_package display_value="Course Manag" source="x_528401_course_ma">2895117683b13210d3241080deaad302</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Course Manag">2895117683b13210d3241080deaad302</sys_scope>
+        <sys_update_name>sp_widget_1e8ef9f283f53210d3241080deaad339</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-12-21 06:49:54</sys_updated_on>
+        <template><![CDATA[<div>
+  <h2 align= 'center'>Welcome to NowVersity.</h2>
+   <h2 align= 'center'> Learn. Upskill. Grow Your Career ]]>🚀<![CDATA[.</h2>
+  
+</div>
+<br/>
+<div class="row">
+  <div class="col-md-4" ng-repeat="course in data.courses">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong>{{course.name}}</strong>
+      </div>
+      <div class="panel-body">
+        <p>{{course.short_description}}</p>
+        <p><b>Timings:</b> {{course.timings}}</p>
+        <p><b>Instructor:</b> {{course.instructor}}</p>
+        <p><b>Cost:</b> ₹{{course.cost}}</p>
+        <button class="btn btn-primary btn-block"
+                ng-click="enroll(course.sys_id)">
+          Enroll
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>1e8ef9f283f53210d3241080deaad339</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-12-17 15:07:10</sys_created_on>
+        <sys_id>928ebdf283f53210d3241080deaad32b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-12-17 15:07:10</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

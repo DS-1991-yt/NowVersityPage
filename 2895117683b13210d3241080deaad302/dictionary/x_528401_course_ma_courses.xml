@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element audit="true" db_object_id="1996157683713210d3241080deaad3f5" label="Courses" max_length="40" name="x_528401_course_ma_courses" type="collection">
+        <element attributes="edge_encryption_enabled=true" label="Course Code" mandatory="true" max_length="20" name="course_code" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="End Date" max_length="40" name="end_date" type="glide_date_time"/>
+        <element attributes="edge_encryption_enabled=true" label="Prerequisites" max_length="500" name="prerequisites" type="string"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element label="Image URL" max_length="100" name="image_url" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Short description" max_length="100" name="short_description" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Description" max_length="1000" name="description" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Schedule/Timings" max_length="200" name="schedule" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Location" max_length="200" name="location" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Instructor Name" max_length="100" name="instructor_name" type="string"/>
+        <element default="0" label="Current Enrollment" max_length="40" name="current_enrollment" read_only="true" type="integer"/>
+        <element label="Course Cost (₹)" mandatory="true" max_length="20" name="cost" type="decimal"/>
+        <element default="30" label="Maximum Capacity" max_length="40" name="max_capacity" type="integer"/>
+        <element attributes="edge_encryption_enabled=true" display="true" label="Course Name" mandatory="true" max_length="120" name="course_name" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Start Date" max_length="40" name="start_date" type="glide_date_time"/>
+        <element default="true" label="Is Active" max_length="40" name="is_active" type="boolean"/>
+        <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
+        <index name="index">
+            <element name="sys_class_name"/>
+        </index>
+    </element>
+</database>

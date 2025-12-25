@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope, spUtil) {
+  /* widget controller */
+  var c = this;
+	
+	
+    $scope.user = {};
+    $scope.submitted = false;
+
+    $scope.submit = function (user) {
+        //alert('button clicked');
+        if ($scope.enrollForm.$invalid) {
+            spUtil.addErrorMessage('Please fill all mandatory fields');
+            return;
+        }
+        c.data.user = user;
+        c.server.update();
+    };
+	
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>course_enrollment</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Course Enrollment</name>
+        <option_schema/>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function() {
+  /* populate the 'data' object */
+  /* e.g., data.table = $sp.getValue('table'); */
+	data.course = {};
+  var courseId = $sp.getParameter('course_id');
+	
+	 if (courseId) {
+        var c = new GlideRecord('x_528401_course_ma_courses');
+        if (c.get(courseId)) {
+            data.course = {
+                sys_id: c.getUniqueValue(),
+                name: c.getValue('course_name'),
+                description: c.getValue('description'),
+                timings: c.getValue('schedule'),
+                cost: c.getValue('cost'),
+                location: c.getValue('location'),
+				prerequisites: c.getValue('prerequisites')
+            };
+        }
+    }
+
+    // ===== Handle Enrollment Submit =====
+    if (input) {
+       
+        var enr = new GlideRecord('x_528401_course_ma_enrollments');
+        enr.initialize();
+
+        enr.course = courseId;
+        enr.student_name = input.user.full_name;
+        enr.email = input.user.email;
+        enr.mobile_number = input.user.mobile;
+        enr.course = courseId;
+			  enr.enrollment_date = new GlideDateTime();
+			if(data.course.cost == '' || data.course.cost == 0 ){
+				enr.status = 'enrolled';
+                enr.payment_confirmed = true;
+			}else{
+				enr.status = 'pending_payment';
+        enr.payment_confirmed = false;
+			}
+
+        data.enrollment_sys_id = enr.insert();
+			  gs.addInfoMessage('You have enrolled successfully. Your enrollment number '+enr.number);
+        data.submitted = true;
+    }
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-12-19 17:40:46</sys_created_on>
+        <sys_id>77d4f4a383fd3210d3241080deaad323</sys_id>
+        <sys_mod_count>21</sys_mod_count>
+        <sys_name>Course Enrollment</sys_name>
+        <sys_package display_value="Course Manag" source="x_528401_course_ma">2895117683b13210d3241080deaad302</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Course Manag">2895117683b13210d3241080deaad302</sys_scope>
+        <sys_update_name>sp_widget_77d4f4a383fd3210d3241080deaad323</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-12-21 07:41:49</sys_updated_on>
+        <template><![CDATA[<div>
+<!-- your widget template -->
+  
+  <div class="row">
+
+  <!-- LEFT: COURSE DETAILS -->
+  <div class="col-md-6">
+    <h3>{{data.course.name}}</h3>
+    
+    <p><b>Timings:</b> {{data.course.timings}}</p>
+    <p><b>Location:</b> {{data.course.location}}</p>
+    <p><b>Cost:</b> ₹{{data.course.cost}}</p>
+    <p><b>Prerequisites:</b> {{data.course.prerequisites}}</p>
+    <p>{{data.course.description}}</p>
+  </div>
+
+  <!-- RIGHT: ENROLLMENT FORM -->
+  <div class="col-md-6">
+    <form name="enrollForm" novalidate>
+
+      <input class="form-control"
+             placeholder="Full Name"
+             ng-model="user.full_name"
+             required><br>
+
+      <input type="email"
+             class="form-control"
+             placeholder="Email"
+             ng-model="user.email"
+             required><br>
+
+      <input class="form-control"
+             placeholder="Mobile Number"
+             ng-model="user.mobile"
+             required><br>
+
+     
+      <button class="btn btn-success btn-block"
+              ng-click="submit(user)"
+              ng-disabled="enrollForm.$invalid">
+        Submit Enrollment
+      </button>
+
+    </form>
+  </div>
+
+</div>
+
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>77d4f4a383fd3210d3241080deaad323</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-12-19 17:40:46</sys_created_on>
+        <sys_id>c8e4bc6383317210d3241080deaad3b0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-12-19 17:40:46</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

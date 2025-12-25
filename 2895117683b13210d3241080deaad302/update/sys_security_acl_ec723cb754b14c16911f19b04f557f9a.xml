@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl">
+    <sys_security_acl action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <admin_overrides>true</admin_overrides>
+        <advanced>false</advanced>
+        <applies_to/>
+        <condition/>
+        <controlled_by_refs/>
+        <decision_type>allow</decision_type>
+        <description>Only course admins can delete courses</description>
+        <local_or_existing>Local</local_or_existing>
+        <name>x_528401_course_ma_courses</name>
+        <operation display_value="delete">delete</operation>
+        <script/>
+        <security_attribute/>
+        <sys_class_name>sys_security_acl</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-12-17 12:12:38</sys_created_on>
+        <sys_id>ec723cb754b14c16911f19b04f557f9a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_528401_course_ma_courses</sys_name>
+        <sys_package display_value="Course Manag" source="x_528401_course_ma">2895117683b13210d3241080deaad302</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Course Manag">2895117683b13210d3241080deaad302</sys_scope>
+        <sys_update_name>sys_security_acl_ec723cb754b14c16911f19b04f557f9a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-12-17 12:12:38</sys_updated_on>
+        <type display_value="record">record</type>
+    </sys_security_acl>
+</record_update>

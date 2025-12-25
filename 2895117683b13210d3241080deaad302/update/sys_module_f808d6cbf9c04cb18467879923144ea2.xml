@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_module">
+    <sys_module action="INSERT_OR_UPDATE">
+        <content><![CDATA[import { gs, GlideRecord } from '@servicenow/glide'
+
+/**
+ * Business rule script to handle enrollment logic
+ * Sets payment amount from course cost and updates course enrollment count
+ */
+export function handleEnrollmentLogic(current, previous) {
+    try {
+        // When a new enrollment is created, set the payment amount from course cost
+        if (current.isNewRecord() && current.course) {
+            const courseGr = new GlideRecord('x_528401_course_ma_courses')
+            if (courseGr.get(current.course)) {
+                current.payment_amount = courseGr.cost
+                gs.info('Enrollment created for course: ' + courseGr.course_name + ' with cost: $' + courseGr.cost)
+            }
+        }
+
+        // When payment is confirmed, update enrollment status  
+        if (!current.isNewRecord() && 
+            current.payment_confirmed == 'true' && 
+            (previous.payment_confirmed != 'true' || !current.payment_date)) {
+            
+            current.status = 'enrolled'
+            current.payment_date = gs.nowDateTime()
+            
+            // Update course enrollment count
+            updateCourseEnrollmentCount(current.course)
+            
+            gs.addInfoMessage('Payment confirmed for ' + current.student_name + '. Enrollment is now active!')
+        }
+
+        // When enrollment is cancelled, update course enrollment count
+        if (!current.isNewRecord() && 
+            current.status == 'cancelled' && 
+            previous.status != 'cancelled') {
+            updateCourseEnrollmentCount(current.course)
+        }
+
+    } catch (error) {
+        gs.error('Error in enrollment business rule: ' + error.message)
+    }
+}
+
+/**
+ * Updates the current enrollment count for a course
+ */
+function updateCourseEnrollmentCount(courseId) {
+    if (!courseId) return
+
+    try {
+        // Count active enrollments
+        const enrollmentGr = new GlideRecord('x_528401_course_ma_enrollments')
+        enrollmentGr.addQuery('course', courseId)
+        enrollmentGr.addQuery('status', 'IN', 'enrolled,completed')
+        enrollmentGr.query()
+        
+        const enrollmentCount = enrollmentGr.getRowCount()
+        
+        // Update course record
+        const courseGr = new GlideRecord('x_528401_course_ma_courses')
+        if (courseGr.get(courseId)) {
+            courseGr.current_enrollment = enrollmentCount
+            courseGr.update()
+            gs.info('Updated enrollment count for course ' + courseGr.course_name + ' to ' + enrollmentCount)
+        }
+    } catch (error) {
+        gs.error('Error updating course enrollment count: ' + error.message)
+    }
+}]]></content>
+        <external_source>false</external_source>
+        <path>x_528401_course_ma/x-528401-course-manag/1.0.0/src/server/enrollment-logic.js</path>
+        <sys_class_name>sys_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-12-17 12:12:38</sys_created_on>
+        <sys_id>f808d6cbf9c04cb18467879923144ea2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_528401_course_ma/x-528401-course-manag/1.0.0/src/server/enrollment-logic.js</sys_name>
+        <sys_package display_value="Course Manag" source="x_528401_course_ma">2895117683b13210d3241080deaad302</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Course Manag">2895117683b13210d3241080deaad302</sys_scope>
+        <sys_update_name>sys_module_f808d6cbf9c04cb18467879923144ea2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-12-17 12:12:38</sys_updated_on>
+    </sys_module>
+</record_update>

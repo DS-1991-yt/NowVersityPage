@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element audit="true" db_object_id="519615f683b13210d3241080deaad361" label="Course Enrollments" max_length="40" name="x_528401_course_ma_enrollments" type="collection">
+        <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
+        <element attributes="edge_encryption_enabled=true" default="javascript:gs.nowDateTime()" dynamic_default_value="79cb83a85f220100a9ad2572f2b4773c" label="Enrollment Date" max_length="40" name="enrollment_date" read_only="true" type="glide_date_time" use_dynamic_default="true"/>
+        <element attributes="edge_encryption_enabled=true" label="Payment Date" max_length="40" name="payment_date" type="glide_date_time"/>
+        <element attributes="edge_encryption_enabled=true" display="true" label="Student Name" mandatory="true" max_length="100" name="student_name" type="string"/>
+        <element choice="1" default="pending_payment" label="Enrollment Status" mandatory="true" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Payment Received" sequence="1" value="payment_received"/>
+                <element inactive_on_update="false" label="Enrolled" sequence="2" value="enrolled"/>
+                <element inactive_on_update="false" label="Completed" sequence="3" value="completed"/>
+                <element inactive_on_update="false" label="Pending Payment" sequence="0" value="pending_payment"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="4" value="cancelled"/>
+            </choice>
+        </element>
+        <element attributes="edge_encryption_enabled=true" label="Notes" max_length="500" name="notes" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Email Address" mandatory="true" max_length="100" name="email" type="string"/>
+        <element attributes="encode_utf8=false" label="Course" mandatory="true" max_length="32" name="course" reference="x_528401_course_ma_courses" type="reference"/>
+        <element label="Payment Amount (₹)" max_length="20" name="payment_amount" read_only="true" type="decimal"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Mobile Number" mandatory="true" max_length="20" name="mobile_number" type="string"/>
+        <element label="Payment Confirmed" max_length="40" name="payment_confirmed" type="boolean"/>
+        <index name="index">
+            <element name="course"/>
+        </index>
+        <index name="index2">
+            <element name="sys_class_name"/>
+        </index>
+    </element>
+</database>
